@@ -1,1 +1,9 @@
+spring:
+  profiles:
+    active: "default"
 
+driver:
+  arguments:
+    - "--headless"
+    - "--disable-gpu"
+    - "--window-size=1400,800"
