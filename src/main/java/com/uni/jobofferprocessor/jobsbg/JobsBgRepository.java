@@ -1,7 +1,9 @@
 package com.uni.jobofferprocessor.jobsbg;
 
 import com.uni.jobofferprocessor.configration.SeleniumWebDriverConfiguration;
+import com.uni.jobofferprocessor.core.general.JobOffer;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -12,12 +14,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author ivelin.dimitrov
  */
 @Repository
 public class JobsBgRepository {
+
+    public static final String JOBS_BG_HOST = "https://www.jobs.bg/front_job_search.php?frompage=";
 
     @Autowired
     SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
@@ -29,16 +34,123 @@ public class JobsBgRepository {
      */
     public List<JobsBgParameter> findAllCategories() {
         List<JobsBgParameter> categories = new ArrayList<>();
-        WebDriver driver = seleniumWebDriverConfiguration.getDriver();
+        WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
 
         return extractAndAddChips(categories, driver, "categoriesChip", "categoriesSelectSheet");
     }
 
+    /**
+     * Returns a list of selectable job locations
+     *
+     * @return locations
+     */
     public List<JobsBgParameter> findAllLocations() {
         List<JobsBgParameter> locations = new ArrayList<>();
-        WebDriver driver = seleniumWebDriverConfiguration.getDriver();
+        WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
 
         return extractAndAddChips(locations, driver, "locationChip", "citySelectSheet");
+    }
+
+    /**
+     * Iterate through pages and extract jobs
+     *
+     * @param maxSize
+     * @param locationId
+     * @param categoryId
+     * @return
+     */
+    public List<JobOffer> findAllJobs(Integer maxSize, Integer locationId, Integer categoryId) {
+        List<JobOffer> offersList = new ArrayList<>();
+
+        IntStream range = IntStream.rangeClosed(0, maxSize / 15 - 1);
+        range.parallel().forEach(currentStep -> {
+            WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
+            driver.get(JOBS_BG_HOST + currentStep * 15 + "&add_sh=1&categories%5B0%5D=" + categoryId + "&location_sid=" + locationId);
+            offersList.addAll(getJobsFromPage(driver));
+            driver.close();
+        });
+
+        offersList.stream()
+                .filter(jobOffer -> jobOffer.getReferenceNumber() != null)
+                .filter(jobOffer -> !jobOffer.getReferenceNumber().isBlank())
+                .forEach(System.out::println);
+
+        return offersList.stream()
+                .filter(jobOffer -> jobOffer.getReferenceNumber() != null)
+                .filter(jobOffer -> !jobOffer.getReferenceNumber().isBlank())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Extract jobs from a single page
+     *
+     * @param driver
+     */
+    public List<JobOffer> getJobsFromPage(WebDriver driver) {
+        List<JobOffer> offerList = new ArrayList<>();
+        driver.findElement(By.id("search_results_div"))
+                .findElement(By.tagName("table"))
+                .findElement(By.tagName("tbody"))
+                .findElement(By.tagName("tr"))
+                .findElement(By.tagName("td"))
+                .findElement(By.tagName("table"))
+                .findElement(By.tagName("tbody"))
+                .findElements(By.tagName("tr")).get(5)
+                .findElement(By.tagName("td"))
+                .findElement(By.tagName("table"))
+                .findElement(By.tagName("tbody"))
+                .findElement(By.tagName("tr"))
+                .findElement(By.tagName("td"))
+                .findElement(By.tagName("table"))
+                .findElement(By.tagName("tbody"))
+                .findElements(By.tagName("tr"))
+                .parallelStream()
+                .forEach(tableRow -> {
+                    JobOffer jobOffer = new JobOffer();
+                    try {
+                        jobOffer.setDescription(tableRow
+                                .findElements(By.tagName("td"))
+                                .get(0)
+                                .findElement(By.tagName("a"))
+                                .getText()
+                        );
+
+                        jobOffer.setOfferLink(tableRow.
+                                findElements(By.tagName("td"))
+                                .get(0)
+                                .findElement(By.tagName("a"))
+                                .getAttribute("href")
+                        );
+
+                        jobOffer.setReferenceNumber(tableRow.
+                                findElements(By.tagName("td"))
+                                .get(0)
+                                .findElement(By.tagName("a"))
+                                .getAttribute("href").replaceAll("\\D+", "")
+                        );
+
+                        jobOffer.setLocation(tableRow.
+                                findElements(By.tagName("td"))
+                                .get(0)
+                                .findElement(By.tagName("div"))
+                                .findElement(By.tagName("span")).getText().split(";")[0]
+                        );
+
+                        try {
+                            jobOffer.setSalary(tableRow.
+                                    findElements(By.tagName("td"))
+                                    .get(0)
+                                    .findElement(By.tagName("div"))
+                                    .findElement(By.tagName("span")).getText().split(";")[1]
+                            );
+                        } catch (ArrayIndexOutOfBoundsException ignored) {
+                        }
+                    } catch (NoSuchElementException ignored) {
+                    }
+                    offerList.add(jobOffer);
+                });
+
+        return offerList;
     }
 
     /**

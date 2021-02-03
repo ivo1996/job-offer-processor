@@ -4,6 +4,6 @@ spring:
 
 driver:
   arguments:
-#    - "--headless"
+    - "--headless"
     - "--disable-gpu"
     - "--window-size=1400,800"

@@ -21,7 +21,6 @@ public class JobOffer {
     String jobPosition;
     String location;
     String salary;
-    String company;
 
     @Override
     public String toString() {
@@ -32,7 +31,6 @@ public class JobOffer {
                 ", jobPosition='" + jobPosition + '\'' +
                 ", location='" + location + '\'' +
                 ", salary='" + salary + '\'' +
-                ", company='" + company + '\'' +
                 '}';
     }
 }

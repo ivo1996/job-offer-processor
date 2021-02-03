@@ -26,13 +26,29 @@ public class SeleniumWebDriverConfiguration {
     @Autowired
     public SeleniumWebDriverConfiguration(DriverArguments driverArguments) {
         this.arguments = driverArguments;
+        driver = createNewDriver();
+    }
 
+    /**
+     * create new webdriver instance
+     * @return
+     */
+    private WebDriver createNewDriver() {
         ChromeOptions chromeOptions = new ChromeOptions();
         arguments.getArguments().forEach(chromeOptions::addArguments);
-        driver = new ChromeDriver(chromeOptions);
-        driver.manage()
+        WebDriver newDriver = new ChromeDriver(chromeOptions);
+        newDriver.manage()
                 .timeouts()
                 .implicitlyWait(10, TimeUnit.SECONDS);
+        return newDriver;
+    }
+
+    /**
+     * return new webdriver instance
+     * @return
+     */
+    public WebDriver getNewDriver() {
+        return createNewDriver();
     }
 
     static {
@@ -79,7 +95,7 @@ public class SeleniumWebDriverConfiguration {
      *
      * @return
      */
-    public WebDriver getDriver() {
+    public WebDriver getStaticDriver() {
         return driver;
     }
 }
