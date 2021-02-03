@@ -20,5 +20,19 @@ public class JobOffer {
     String offerLink;
     String jobPosition;
     String location;
-    Salary salary;
+    String salary;
+    String company;
+
+    @Override
+    public String toString() {
+        return "JobOffer{" +
+                "referenceNumber='" + referenceNumber + '\'' +
+                ", description='" + description + '\'' +
+                ", offerLink='" + offerLink + '\'' +
+                ", jobPosition='" + jobPosition + '\'' +
+                ", location='" + location + '\'' +
+                ", salary='" + salary + '\'' +
+                ", company='" + company + '\'' +
+                '}';
+    }
 }

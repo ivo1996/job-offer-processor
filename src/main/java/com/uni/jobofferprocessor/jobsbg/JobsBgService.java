@@ -1,7 +1,5 @@
-package com.uni.jobofferprocessor.core;
+package com.uni.jobofferprocessor.jobsbg;
 
-import com.uni.jobofferprocessor.configration.SeleniumWebDriverConfiguration;
-import com.uni.jobofferprocessor.core.jobsbg.JobsBgParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,5 @@
-package com.uni.jobofferprocessor.core;
+package com.uni.jobofferprocessor.jobsbg;
 
-import com.uni.jobofferprocessor.core.jobsbg.JobsBgParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

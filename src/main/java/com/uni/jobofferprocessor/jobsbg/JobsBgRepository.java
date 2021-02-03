@@ -1,7 +1,6 @@
-package com.uni.jobofferprocessor.core;
+package com.uni.jobofferprocessor.jobsbg;
 
 import com.uni.jobofferprocessor.configration.SeleniumWebDriverConfiguration;
-import com.uni.jobofferprocessor.core.jobsbg.JobsBgParameter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
