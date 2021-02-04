@@ -7,3 +7,4 @@ driver:
     - "--headless"
     - "--disable-gpu"
     - "--window-size=1400,800"
+  timeoutInSeconds: 10

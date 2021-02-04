@@ -1,7 +1,7 @@
 package com.uni.jobofferprocessor.jobsbg;
 
 import com.uni.jobofferprocessor.configration.SeleniumWebDriverConfiguration;
-import com.uni.jobofferprocessor.core.general.JobOffer;
+import com.uni.jobofferprocessor.core.JobOffer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -69,11 +69,6 @@ public class JobsBgRepository {
             offersList.addAll(getJobsFromPage(driver));
             driver.close();
         });
-
-        offersList.stream()
-                .filter(jobOffer -> jobOffer.getReferenceNumber() != null)
-                .filter(jobOffer -> !jobOffer.getReferenceNumber().isBlank())
-                .forEach(System.out::println);
 
         return offersList.stream()
                 .filter(jobOffer -> jobOffer.getReferenceNumber() != null)

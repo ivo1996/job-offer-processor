@@ -1,4 +1,4 @@
-package com.uni.jobofferprocessor.core.general;
+package com.uni.jobofferprocessor.core;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

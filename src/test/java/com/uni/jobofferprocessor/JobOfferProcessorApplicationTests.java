@@ -1,7 +1,7 @@
 package com.uni.jobofferprocessor;
 
 import com.uni.jobofferprocessor.configration.SeleniumWebDriverConfiguration;
-import com.uni.jobofferprocessor.core.general.JobOffer;
+import com.uni.jobofferprocessor.core.JobOffer;
 import com.uni.jobofferprocessor.jobsbg.JobsBgRepository;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
