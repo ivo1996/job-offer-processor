@@ -22,17 +22,17 @@ public class JobsBgService {
 
     /**
      * Init and persist jobs bg locations and categories inmemory, executed on app start up
+     *
      * @param jobsBgRepository
      */
-    @Autowired
     public JobsBgService(JobsBgRepository jobsBgRepository) {
-        assert false;
         log.info("Fetching Jobs.bg available locatons.");
-        locationsList= jobsBgRepository.findAllLocations();
+        locationsList = jobsBgRepository.findAllLocations();
         log.info("Fetching Jobs.bg available job categories.");
         categoriesList = jobsBgRepository.findAllCategories();
         log.info("Available Jobs.bg locations: " + locationsList.size());
         log.info("Available Jobs.bg job categories: " + categoriesList.size());
+        this.jobsBgRepository = jobsBgRepository;
     }
 
     public List<JobOffer> findAllJobs(Integer size, Integer locationId, Integer categoryId) {

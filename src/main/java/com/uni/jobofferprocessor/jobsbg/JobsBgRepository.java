@@ -1,6 +1,6 @@
 package com.uni.jobofferprocessor.jobsbg;
 
-import com.uni.jobofferprocessor.configration.SeleniumWebDriverConfiguration;
+import com.uni.jobofferprocessor.configuration.SeleniumWebDriverConfiguration;
 import com.uni.jobofferprocessor.core.JobOffer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;

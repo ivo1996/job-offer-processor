@@ -1,4 +1,4 @@
-package com.uni.jobofferprocessor.configration;
+package com.uni.jobofferprocessor.configuration;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

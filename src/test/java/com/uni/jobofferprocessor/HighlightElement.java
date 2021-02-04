@@ -1,10 +1,8 @@
 package com.uni.jobofferprocessor;
 
-import com.uni.jobofferprocessor.configration.SeleniumWebDriverConfiguration;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author ivelin.dimitrov
