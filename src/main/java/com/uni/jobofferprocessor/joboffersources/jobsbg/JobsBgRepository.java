@@ -28,6 +28,11 @@ public class JobsBgRepository {
     private final SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
     private final Integer timeout;
 
+    /**
+     * Inits timeout from application properties and injects selenium configuration
+     * @param seleniumWebDriverConfiguration
+     * @param env
+     */
     public JobsBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));

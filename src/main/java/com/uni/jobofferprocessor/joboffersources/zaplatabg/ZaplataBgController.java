@@ -22,6 +22,14 @@ public class ZaplataBgController {
     @Autowired
     ZaplataBgService zaplataBgService;
 
+    /**
+     * Returns specified number of offers and validates parameters
+     * @param size
+     * @param locationName
+     * @param categoryId
+     * @return
+     * @throws JobOfferError
+     */
     @GetMapping()
     public ResponseEntity<List<JobOffer>> getAllJobs(
             @RequestParam(name = "size") Integer size,
@@ -31,11 +39,19 @@ public class ZaplataBgController {
         return new ResponseEntity<>(zaplataBgService.findAllJobs(size, categoryId, locationName), HttpStatus.OK);
     }
 
+    /**
+     * Returns preloaded list of locations
+     * @return
+     */
     @GetMapping("/locations")
     public ResponseEntity<List<String>> findAllLocations() {
         return new ResponseEntity<>(zaplataBgService.findAllLocations(), HttpStatus.OK);
     }
 
+    /**
+     * Returns preloaded list of categories
+     * @return
+     */
     @GetMapping("/categories")
     public ResponseEntity<List<ZaplataBgCategoryParameter>> findAllCategories() {
         return new ResponseEntity<>(zaplataBgService.findAllCategories(), HttpStatus.OK);

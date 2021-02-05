@@ -22,6 +22,14 @@ public class JobsBgController {
     @Autowired
     JobsBgService jobsBgService;
 
+    /**
+     * Finds all jobs bg offers by parameters
+     * @param size
+     * @param locationId
+     * @param categoryId
+     * @return 200 OK
+     * @throws JobOfferError
+     */
     @GetMapping()
     public ResponseEntity<List<JobOffer>> findAllJobs(
             @RequestParam(name = "size") Integer size,
@@ -31,11 +39,19 @@ public class JobsBgController {
         return new ResponseEntity<>(jobsBgService.findAllJobs(size, locationId, categoryId), HttpStatus.OK);
     }
 
+    /**
+     * Returns preloaded locations
+     * @return
+     */
     @GetMapping("/locations")
     public ResponseEntity<List<JobsBgParameter>> findAllLocations() {
         return new ResponseEntity<>(jobsBgService.findAllLocations(), HttpStatus.OK);
     }
 
+    /**
+     * Returns preloaded categories
+     * @return
+     */
     @GetMapping("/categories")
     public ResponseEntity<List<JobsBgParameter>> findAllCategories() {
         return new ResponseEntity<>(jobsBgService.findAllCategories(), HttpStatus.OK);

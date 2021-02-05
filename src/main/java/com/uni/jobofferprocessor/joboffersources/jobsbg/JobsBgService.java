@@ -29,13 +29,21 @@ public class JobsBgService {
     public JobsBgService(JobsBgRepository jobsBgRepository) {
         log.info("Fetching Jobs.bg available locatons.");
         locationsList = jobsBgRepository.findAllLocations();
+        log.info("Available Jobs.bg locations: " + locationsList.size());
         log.info("Fetching Jobs.bg available job categories.");
         categoriesList = jobsBgRepository.findAllCategories();
-        log.info("Available Jobs.bg locations: " + locationsList.size());
         log.info("Available Jobs.bg job categories: " + categoriesList.size());
         this.jobsBgRepository = jobsBgRepository;
     }
 
+    /**
+     * Validate and call repository
+     * @param size
+     * @param locationId
+     * @param categoryId
+     * @return
+     * @throws JobOfferError
+     */
     public List<JobOffer> findAllJobs(Integer size, Integer locationId, Integer categoryId) throws JobOfferError {
         Optional<JobsBgParameter> categoryIdFound = categoriesList
                 .stream()

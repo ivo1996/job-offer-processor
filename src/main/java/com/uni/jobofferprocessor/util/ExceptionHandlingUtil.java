@@ -15,6 +15,11 @@ import java.util.Calendar;
 @ControllerAdvice
 public class ExceptionHandlingUtil {
 
+    /**
+     * Handles custom error that is manually thrown when validating
+     * @param error
+     * @return
+     */
     @ExceptionHandler(value = {JobOfferError.class})
     protected ResponseEntity<Object> handleJobOfferError(JobOfferError error) {
         return new ResponseEntity<>(
@@ -26,6 +31,11 @@ public class ExceptionHandlingUtil {
                 HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handles scenarios where endpoint parameter types are mismatched (ex. String is given to Integer field)
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
     protected ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         return new ResponseEntity<>(

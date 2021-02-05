@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import java.sql.Timestamp;
 
 /**
+ * The response structure on error
  * @author ivelin.dimitrov
  */
 @Getter

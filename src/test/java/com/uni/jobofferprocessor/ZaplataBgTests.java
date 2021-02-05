@@ -1,7 +1,5 @@
 package com.uni.jobofferprocessor;
 
-import com.uni.jobofferprocessor.configuration.SeleniumWebDriverConfiguration;
-import com.uni.jobofferprocessor.joboffersources.zaplatabg.ZaplataBgRepository;
 import com.uni.jobofferprocessor.joboffersources.zaplatabg.ZaplataBgService;
 import com.uni.jobofferprocessor.util.JobOfferError;
 import org.junit.jupiter.api.Test;

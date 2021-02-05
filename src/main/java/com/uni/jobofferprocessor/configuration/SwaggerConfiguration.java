@@ -13,6 +13,10 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 public class SwaggerConfiguration {
 
+    /**
+     * Swagger configuration - matches every possible entity and endpoint
+     * @return
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)

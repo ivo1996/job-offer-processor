@@ -29,6 +29,9 @@ public class ZaplataBgRepository {
 
     private static final String ZAPLATA_BG_HOST = "https://www.zaplata.bg/";
 
+    /**
+     * Hardcoded list of location IDs
+     */
     private static final List<String> availableLocations = List.of(
             "plovdiv",
             "sofia",
@@ -39,6 +42,11 @@ public class ZaplataBgRepository {
             "gr-pleven"
     );
 
+    /**
+     * Injects selenium config and fetches timeout property from yml
+     * @param seleniumWebDriverConfiguration
+     * @param env
+     */
     public ZaplataBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
@@ -73,6 +81,13 @@ public class ZaplataBgRepository {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Parallel iteration of both offers and pages, serializes jobOffer obj
+     * @param max
+     * @param categoryId
+     * @param locationName
+     * @return
+     */
     public List<JobOffer> getJobOffers(Integer max, Integer categoryId, String locationName) {
         List<JobOffer> offerList = new ArrayList<>();
         IntStream range = IntStream.rangeClosed(1, max / 20);

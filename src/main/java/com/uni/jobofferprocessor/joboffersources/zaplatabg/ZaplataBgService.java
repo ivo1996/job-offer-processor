@@ -26,19 +26,35 @@ public class ZaplataBgService {
      */
     public ZaplataBgService(ZaplataBgRepository zaplataBgRepository) {
         this.zaplataBgRepository = zaplataBgRepository;
-        log.info("Fetching zaplata.bg categories");
+        log.info("Fetching zaplata.bg available categories");
         this.availableJobCategories = zaplataBgRepository.getCategories();
         log.info("Available zaplata.bg categories: " + this.availableJobCategories.size());
     }
 
+    /**
+     * Returns preloaded list of locations
+     * @return
+     */
     public List<String> findAllLocations() {
         return zaplataBgRepository.findAllLocations();
     }
 
+    /**
+     * Returns preloaded list of categories
+     * @return
+     */
     public List<ZaplataBgCategoryParameter> findAllCategories() {
         return this.availableJobCategories;
     }
 
+    /**
+     * validates parameters and calls service to extract job offers
+     * @param max
+     * @param categoryId
+     * @param locationName
+     * @return
+     * @throws JobOfferError
+     */
     public List<JobOffer> findAllJobs(Integer max, Integer categoryId, String locationName) throws JobOfferError {
         Optional<ZaplataBgCategoryParameter> categoryIdFound = availableJobCategories
                 .stream()
