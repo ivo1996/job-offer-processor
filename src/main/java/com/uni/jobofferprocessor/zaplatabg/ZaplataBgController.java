@@ -28,7 +28,7 @@ public class ZaplataBgController {
             @RequestParam(name = "locationName") String locationName,
             @RequestParam(name = "categoryId") Integer categoryId
     ) throws JobOfferError {
-        return new ResponseEntity<>(zaplataBgService.getAllJobs(size, categoryId, locationName), HttpStatus.OK);
+        return new ResponseEntity<>(zaplataBgService.findAllJobs(size, categoryId, locationName), HttpStatus.OK);
     }
 
     @GetMapping("/locations")

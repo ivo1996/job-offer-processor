@@ -21,4 +21,5 @@ public class ExceptionBody {
     HttpStatus status;
     Timestamp timestamp;
     String message;
+    String details;
 }

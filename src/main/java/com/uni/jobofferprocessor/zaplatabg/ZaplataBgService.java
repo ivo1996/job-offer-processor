@@ -39,7 +39,7 @@ public class ZaplataBgService {
         return this.availableJobCategories;
     }
 
-    public List<JobOffer> getAllJobs(Integer max, Integer categoryId, String locationName) throws JobOfferError {
+    public List<JobOffer> findAllJobs(Integer max, Integer categoryId, String locationName) throws JobOfferError {
         Optional<ZaplataBgCategoryParameter> categoryIdFound = availableJobCategories
                 .stream()
                 .filter(it -> it.getId().equals(categoryId))
@@ -50,6 +50,9 @@ public class ZaplataBgService {
         }
         if (!findAllLocations().contains(locationName)) {
             throw new JobOfferError("Location is invalid. Received: " + locationName);
+        }
+        if (max < 1) {
+            throw new JobOfferError("Size is invalid. Received: " + max);
         }
 
         return zaplataBgRepository.getJobOffers(max, categoryId, locationName);

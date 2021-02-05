@@ -53,6 +53,9 @@ public class JobsBgService {
         if (locationIdFound.isEmpty()) {
             throw new JobOfferError("Location is invalid. Received: " + locationId);
         }
+        if (size < 1) {
+            throw new JobOfferError("Size is invalid. Received: " + size);
+        }
         return jobsBgRepository.findAllJobs(size, locationId, categoryId);
     }
 

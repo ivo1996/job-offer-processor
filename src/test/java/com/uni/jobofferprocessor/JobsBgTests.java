@@ -12,9 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.uni.jobofferprocessor.jobsbg.JobsBgRepository.JOBS_BG_HOST;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class JobsBgTests {
@@ -29,33 +31,48 @@ class JobsBgTests {
     SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
 
     @Test
-    void getJobsBgCategories() {
+    void getJobsBgCategoriesPositiveTest() {
         assertFalse(jobsBgService.findAllCategories().isEmpty());
     }
 
     @Test
-    void getJobsBgTowns() {
+    void getJobsBgTownsPositiveTest() {
         assertFalse(jobsBgService.findAllLocations().isEmpty());
     }
 
     @Test
-    void getJobsFromSinglePage() {
+    void getJobsFromSinglePagePositiveTest() {
         WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
         driver.get(JOBS_BG_HOST + 0 + "&add_sh=1&categories%5B0%5D=" + 56 + "&location_sid=" + 3);
         List<JobOffer> offerList = new ArrayList<>(jobsBgRepository.getJobsFromPage(driver));
-        offerList.stream()
+        offerList = offerList.stream()
                 .filter(jobOffer -> jobOffer.getReferenceNumber() != null)
                 .filter(jobOffer -> !jobOffer.getReferenceNumber().isBlank())
-                .forEach(System.out::println);
+                .collect(Collectors.toList());
 
         assertFalse(offerList.isEmpty());
     }
 
     @Test
-    void getJobsFromMultiplePages() throws JobOfferError {
+    void getJobsFromMultiplePagesPositiveTest() throws JobOfferError {
         List<JobOffer> jobOffers = jobsBgService.findAllJobs(15, 3, 56);
-        System.out.println(jobOffers.size());
         assertFalse(jobOffers.isEmpty());
     }
+
+    @Test
+    void getJobsFromMultiplePagesNegativeValidationForSizeTest() throws JobOfferError {
+        assertThrows(JobOfferError.class, () -> jobsBgService.findAllJobs(-1, 3, 56));
+    }
+
+    @Test
+    void getJobsFromMultiplePagesNegativeValidationForLocationTest() throws JobOfferError {
+        assertThrows(JobOfferError.class, () -> jobsBgService.findAllJobs(15, 0, 56));
+    }
+
+    @Test
+    void getJobsFromMultiplePagesNegativeValidationForCategoryTest() throws JobOfferError {
+        assertThrows(JobOfferError.class, () -> jobsBgService.findAllJobs(15, 3, 200000));
+    }
+
 
 }
