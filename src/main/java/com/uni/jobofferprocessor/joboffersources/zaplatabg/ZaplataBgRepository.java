@@ -1,4 +1,4 @@
-package com.uni.jobofferprocessor.zaplatabg;
+package com.uni.jobofferprocessor.joboffersources.zaplatabg;
 
 import com.uni.jobofferprocessor.configuration.SeleniumWebDriverConfiguration;
 import com.uni.jobofferprocessor.core.JobOffer;
@@ -94,7 +94,6 @@ public class ZaplataBgRepository {
                             offer.setSalary(element.findElement(By.className("is_visibility_salary")).getText());
                         } catch (NoSuchElementException ignored) {
                         }
-                        System.out.println(offer);
                         offerList.add(offer);
                     });
             driver.close();

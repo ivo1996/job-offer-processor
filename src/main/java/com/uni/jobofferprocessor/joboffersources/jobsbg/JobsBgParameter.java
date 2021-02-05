@@ -1,7 +1,6 @@
-package com.uni.jobofferprocessor.zaplatabg;
+package com.uni.jobofferprocessor.joboffersources.jobsbg;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,17 +12,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ZaplataBgCategoryParameter {
-
+public class JobsBgParameter {
     Integer id;
-    String description;
+    String name;
 
     @Override
     public String toString() {
-        return "ZaplataBgCategoryParameter{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
+        return "JobsBgParameter{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

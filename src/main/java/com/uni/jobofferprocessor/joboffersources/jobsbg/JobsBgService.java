@@ -1,4 +1,4 @@
-package com.uni.jobofferprocessor.jobsbg;
+package com.uni.jobofferprocessor.joboffersources.jobsbg;
 
 import com.uni.jobofferprocessor.core.JobOffer;
 import com.uni.jobofferprocessor.util.JobOfferError;

@@ -1,9 +1,9 @@
 package com.uni.jobofferprocessor;
 
 import com.uni.jobofferprocessor.configuration.SeleniumWebDriverConfiguration;
+import com.uni.jobofferprocessor.joboffersources.zaplatabg.ZaplataBgRepository;
+import com.uni.jobofferprocessor.joboffersources.zaplatabg.ZaplataBgService;
 import com.uni.jobofferprocessor.util.JobOfferError;
-import com.uni.jobofferprocessor.zaplatabg.ZaplataBgRepository;
-import com.uni.jobofferprocessor.zaplatabg.ZaplataBgService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,16 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 class ZaplataBgTests {
 
-    private static final String ZAPLATA_BG_HOST = "https://www.zaplata.bg/";
-
-    @Autowired
-    ZaplataBgRepository zaplataBgRepository;
-
     @Autowired
     ZaplataBgService zaplataBgService;
-
-    @Autowired
-    SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
 
     @Test
     void getAllLocationsPositiveTest() {
@@ -44,17 +36,17 @@ class ZaplataBgTests {
     }
 
     @Test
-    void getJobsFromMultiplePagesNegativeValidationForSizeTest() throws JobOfferError {
+    void getJobsFromMultiplePagesNegativeValidationForSizeTest() {
         assertThrows(JobOfferError.class, () -> zaplataBgService.findAllJobs(-1, 3, "sofia"));
     }
 
     @Test
-    void getJobsFromMultiplePagesNegativeValidationForCategoryTest() throws JobOfferError {
+    void getJobsFromMultiplePagesNegativeValidationForCategoryTest() {
         assertThrows(JobOfferError.class, () -> zaplataBgService.findAllJobs(20, 0, "rousse"));
     }
 
     @Test
-    void getJobsFromMultiplePagesNegativeValidationForLocationTest() throws JobOfferError {
+    void getJobsFromMultiplePagesNegativeValidationForLocationTest() {
         assertThrows(JobOfferError.class, () -> zaplataBgService.findAllJobs(20, 3, "fakeName"));
     }
 

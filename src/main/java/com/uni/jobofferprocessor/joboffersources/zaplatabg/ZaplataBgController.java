@@ -1,4 +1,4 @@
-package com.uni.jobofferprocessor.jobsbg;
+package com.uni.jobofferprocessor.joboffersources.zaplatabg;
 
 import com.uni.jobofferprocessor.core.JobOffer;
 import com.uni.jobofferprocessor.util.JobOfferError;
@@ -16,28 +16,28 @@ import java.util.List;
  * @author ivelin.dimitrov
  */
 @Controller
-@RequestMapping("/api/jobsbg")
-public class JobsBgController {
+@RequestMapping("/api/zaplatabg")
+public class ZaplataBgController {
 
     @Autowired
-    JobsBgService jobsBgService;
+    ZaplataBgService zaplataBgService;
 
     @GetMapping()
-    public ResponseEntity<List<JobOffer>> findAllJobs(
+    public ResponseEntity<List<JobOffer>> getAllJobs(
             @RequestParam(name = "size") Integer size,
-            @RequestParam(name = "locationId") Integer locationId,
+            @RequestParam(name = "locationName") String locationName,
             @RequestParam(name = "categoryId") Integer categoryId
     ) throws JobOfferError {
-        return new ResponseEntity<>(jobsBgService.findAllJobs(size, locationId, categoryId), HttpStatus.OK);
+        return new ResponseEntity<>(zaplataBgService.findAllJobs(size, categoryId, locationName), HttpStatus.OK);
     }
 
     @GetMapping("/locations")
-    public ResponseEntity<List<JobsBgParameter>> findAllLocations() {
-        return new ResponseEntity<>(jobsBgService.findAllLocations(), HttpStatus.OK);
+    public ResponseEntity<List<String>> findAllLocations() {
+        return new ResponseEntity<>(zaplataBgService.findAllLocations(), HttpStatus.OK);
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<List<JobsBgParameter>> findAllCategories() {
-        return new ResponseEntity<>(jobsBgService.findAllCategories(), HttpStatus.OK);
+    public ResponseEntity<List<ZaplataBgCategoryParameter>> findAllCategories() {
+        return new ResponseEntity<>(zaplataBgService.findAllCategories(), HttpStatus.OK);
     }
 }

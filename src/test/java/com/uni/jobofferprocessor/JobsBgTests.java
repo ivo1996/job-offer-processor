@@ -2,8 +2,8 @@ package com.uni.jobofferprocessor;
 
 import com.uni.jobofferprocessor.configuration.SeleniumWebDriverConfiguration;
 import com.uni.jobofferprocessor.core.JobOffer;
-import com.uni.jobofferprocessor.jobsbg.JobsBgRepository;
-import com.uni.jobofferprocessor.jobsbg.JobsBgService;
+import com.uni.jobofferprocessor.joboffersources.jobsbg.JobsBgRepository;
+import com.uni.jobofferprocessor.joboffersources.jobsbg.JobsBgService;
 import com.uni.jobofferprocessor.util.JobOfferError;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.uni.jobofferprocessor.jobsbg.JobsBgRepository.JOBS_BG_HOST;
+import static com.uni.jobofferprocessor.joboffersources.jobsbg.JobsBgRepository.JOBS_BG_HOST;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -60,17 +60,17 @@ class JobsBgTests {
     }
 
     @Test
-    void getJobsFromMultiplePagesNegativeValidationForSizeTest() throws JobOfferError {
+    void getJobsFromMultiplePagesNegativeValidationForSizeTest() {
         assertThrows(JobOfferError.class, () -> jobsBgService.findAllJobs(-1, 3, 56));
     }
 
     @Test
-    void getJobsFromMultiplePagesNegativeValidationForLocationTest() throws JobOfferError {
+    void getJobsFromMultiplePagesNegativeValidationForLocationTest() {
         assertThrows(JobOfferError.class, () -> jobsBgService.findAllJobs(15, 0, 56));
     }
 
     @Test
-    void getJobsFromMultiplePagesNegativeValidationForCategoryTest() throws JobOfferError {
+    void getJobsFromMultiplePagesNegativeValidationForCategoryTest() {
         assertThrows(JobOfferError.class, () -> jobsBgService.findAllJobs(15, 3, 200000));
     }
 
