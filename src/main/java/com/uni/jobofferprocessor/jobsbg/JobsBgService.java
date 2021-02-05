@@ -1,11 +1,12 @@
 package com.uni.jobofferprocessor.jobsbg;
 
 import com.uni.jobofferprocessor.core.JobOffer;
+import com.uni.jobofferprocessor.util.JobOfferError;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author ivelin.dimitrov
@@ -14,7 +15,7 @@ import java.util.List;
 @Slf4j
 public class JobsBgService {
 
-    JobsBgRepository jobsBgRepository;
+    private final JobsBgRepository jobsBgRepository;
 
     private final List<JobsBgParameter> locationsList;
 
@@ -35,7 +36,23 @@ public class JobsBgService {
         this.jobsBgRepository = jobsBgRepository;
     }
 
-    public List<JobOffer> findAllJobs(Integer size, Integer locationId, Integer categoryId) {
+    public List<JobOffer> findAllJobs(Integer size, Integer locationId, Integer categoryId) throws JobOfferError {
+        Optional<JobsBgParameter> categoryIdFound = categoriesList
+                .stream()
+                .filter(it -> it.getId().equals(categoryId))
+                .findAny();
+
+        Optional<JobsBgParameter> locationIdFound = locationsList
+                .stream()
+                .filter(it -> it.getId().equals(locationId))
+                .findAny();
+
+        if (categoryIdFound.isEmpty()) {
+            throw new JobOfferError("Category id is invalid. Received: " + categoryId);
+        }
+        if (locationIdFound.isEmpty()) {
+            throw new JobOfferError("Location is invalid. Received: " + locationId);
+        }
         return jobsBgRepository.findAllJobs(size, locationId, categoryId);
     }
 

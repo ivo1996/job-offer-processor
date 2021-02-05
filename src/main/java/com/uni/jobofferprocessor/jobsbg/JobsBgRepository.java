@@ -7,12 +7,13 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -24,8 +25,13 @@ public class JobsBgRepository {
 
     public static final String JOBS_BG_HOST = "https://www.jobs.bg/front_job_search.php?frompage=";
 
-    @Autowired
-    SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
+    private final SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
+    private final Integer timeout;
+
+    public JobsBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
+        this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
+        this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
+    }
 
     /**
      * Returns a list of selectable job categories
@@ -158,7 +164,7 @@ public class JobsBgRepository {
      * @return
      */
     private List<JobsBgParameter> extractAndAddChips(List<JobsBgParameter> parameters, WebDriver driver, String modalButton, String modalId) {
-        WebDriverWait block = new WebDriverWait(driver, 10);
+        WebDriverWait block = new WebDriverWait(driver, this.timeout);
 
         // open modal and iterate through all chips
         driver.get("https://www.jobs.bg/");

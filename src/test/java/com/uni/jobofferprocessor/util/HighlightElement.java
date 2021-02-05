@@ -1,4 +1,4 @@
-package com.uni.jobofferprocessor;
+package com.uni.jobofferprocessor.util;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
