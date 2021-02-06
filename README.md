@@ -33,6 +33,19 @@ All properties are mandatory
        - "--disable-gpu"
        - "--window-size=1400,800"
        timeoutInSeconds: 10
+    zaplatabg:
+    url: "https://www.zaplata.bg/"
+    offers-selector: "body > div.page.lineHeightFix.pInside > ul.scheme23 > li.left > div.listItems"
+    categories-selector: "#hsCatPU > div.inside > div:nth-child"
+    jobsbg:
+    url: "https://www.jobs.bg/front_job_search.php?frompage="
+    offers-selector: "#search_results_div > table > tbody > tr > td > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td:nth-child(1) > table > tbody"
+    locations-selector: "citySelectSheet"
+    categories-selector: "categoriesSelectSheet"
+    olx:
+    url: "https://www.olx.bg/rabota/"
+    offers-selector: "#offers_table > tbody"
+    locations-selector: "#proposalContainer > div.abs.categorySelectContainer > ul"
 
 driver.arguments can be used to modify the chrome driver options.
 
