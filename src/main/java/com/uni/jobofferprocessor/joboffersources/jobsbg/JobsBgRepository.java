@@ -2,6 +2,7 @@ package com.uni.jobofferprocessor.joboffersources.jobsbg;
 
 import com.uni.jobofferprocessor.configuration.SeleniumWebDriverConfiguration;
 import com.uni.jobofferprocessor.core.JobOffer;
+import lombok.Getter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -23,19 +24,29 @@ import java.util.stream.IntStream;
 @Repository
 public class JobsBgRepository {
 
-    public static final String JOBS_BG_HOST = "https://www.jobs.bg/front_job_search.php?frompage=";
 
     private final SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
     private final Integer timeout;
+    private final String offersSelector;
+    private final String locationsSelector;
+    private final String categoriesSelector;
+    @Getter
+    private final String host;
+
 
     /**
      * Inits timeout from application properties and injects selenium configuration
+     *
      * @param seleniumWebDriverConfiguration
      * @param env
      */
     public JobsBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
+        this.offersSelector = Objects.requireNonNull(env.getProperty("jobsbg.offers-selector"));
+        this.locationsSelector = Objects.requireNonNull(env.getProperty("jobsbg.locations-selector"));
+        this.categoriesSelector = Objects.requireNonNull(env.getProperty("jobsbg.categories-selector"));
+        this.host = Objects.requireNonNull(env.getProperty("jobsbg.url"));
     }
 
     /**
@@ -47,7 +58,7 @@ public class JobsBgRepository {
         List<JobsBgParameter> categories = new ArrayList<>();
         WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
 
-        return extractAndAddChips(categories, driver, "categoriesChip", "categoriesSelectSheet");
+        return extractAndAddChips(categories, driver, "categoriesChip", categoriesSelector);
     }
 
     /**
@@ -59,7 +70,7 @@ public class JobsBgRepository {
         List<JobsBgParameter> locations = new ArrayList<>();
         WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
 
-        return extractAndAddChips(locations, driver, "locationChip", "citySelectSheet");
+        return extractAndAddChips(locations, driver, "locationChip", locationsSelector);
     }
 
     /**
@@ -76,7 +87,7 @@ public class JobsBgRepository {
         IntStream range = IntStream.rangeClosed(0, maxSize / 15 - 1);
         range.parallel().forEach(currentStep -> {
             WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
-            driver.get(JOBS_BG_HOST + currentStep * 15 + "&add_sh=1&categories%5B0%5D=" + categoryId + "&location_sid=" + locationId);
+            driver.get(host + currentStep * 15 + "&add_sh=1&categories%5B0%5D=" + categoryId + "&location_sid=" + locationId);
             offersList.addAll(getJobsFromPage(driver));
             driver.close();
         });
@@ -94,21 +105,7 @@ public class JobsBgRepository {
      */
     public List<JobOffer> getJobsFromPage(WebDriver driver) {
         List<JobOffer> offerList = new ArrayList<>();
-        driver.findElement(By.id("search_results_div"))
-                .findElement(By.tagName("table"))
-                .findElement(By.tagName("tbody"))
-                .findElement(By.tagName("tr"))
-                .findElement(By.tagName("td"))
-                .findElement(By.tagName("table"))
-                .findElement(By.tagName("tbody"))
-                .findElements(By.tagName("tr")).get(5)
-                .findElement(By.tagName("td"))
-                .findElement(By.tagName("table"))
-                .findElement(By.tagName("tbody"))
-                .findElement(By.tagName("tr"))
-                .findElement(By.tagName("td"))
-                .findElement(By.tagName("table"))
-                .findElement(By.tagName("tbody"))
+        driver.findElement(By.cssSelector(offersSelector))
                 .findElements(By.tagName("tr"))
                 .parallelStream()
                 .forEach(tableRow -> {
