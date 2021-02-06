@@ -2,6 +2,7 @@ package com.uni.jobofferprocessor.joboffersources.zaplatabg;
 
 import com.uni.jobofferprocessor.core.JobOffer;
 import com.uni.jobofferprocessor.util.JobOfferError;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class ZaplataBgService {
 
     private final ZaplataBgRepository zaplataBgRepository;
 
+    @Getter
     private final List<ZaplataBgCategoryParameter> availableJobCategories;
 
     /**
