@@ -26,8 +26,9 @@ public class ZaplataBgRepository {
 
     private final SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
     private final Integer timeout;
-
-    private static final String ZAPLATA_BG_HOST = "https://www.zaplata.bg/";
+    private final String host;
+    private final String offersSelector;
+    private final String categoriesSelector;
 
     /**
      * Hardcoded list of location IDs
@@ -44,12 +45,16 @@ public class ZaplataBgRepository {
 
     /**
      * Injects selenium config and fetches timeout property from yml
+     *
      * @param seleniumWebDriverConfiguration
      * @param env
      */
     public ZaplataBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
+        this.host = Objects.requireNonNull(env.getProperty("zaplatabg.url"));
+        this.offersSelector = Objects.requireNonNull(env.getProperty("zaplatabg.offers-selector"));
+        this.categoriesSelector = Objects.requireNonNull(env.getProperty("zaplatabg.categories-selector"));
     }
 
     /**
@@ -69,12 +74,12 @@ public class ZaplataBgRepository {
     public List<ZaplataBgCategoryParameter> getCategories() {
         List<ZaplataBgCategoryParameter> categoryParameterList = new ArrayList<>();
         WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
-        driver.get(ZAPLATA_BG_HOST);
+        driver.get(host);
         driver.findElement(By.id("hsCatLink")).click();
         WebDriverWait block = new WebDriverWait(driver, this.timeout);
         block.until(ExpectedConditions.visibilityOfElementLocated(By.id("hsCatPU")));
-        categoryParameterList.addAll(extractCategoriesFromModalTd("#hsCatPU > div.inside > div:nth-child(1)", driver));
-        categoryParameterList.addAll(extractCategoriesFromModalTd("#hsCatPU > div.inside > div:nth-child(2)", driver));
+        categoryParameterList.addAll(extractCategoriesFromModalTd(categoriesSelector + "(1)", driver));
+        categoryParameterList.addAll(extractCategoriesFromModalTd(categoriesSelector + "(2)", driver));
         return categoryParameterList
                 .stream()
                 .sorted(Comparator.comparingInt(ZaplataBgCategoryParameter::getId))
@@ -83,6 +88,7 @@ public class ZaplataBgRepository {
 
     /**
      * Parallel iteration of both offers and pages, serializes jobOffer obj
+     *
      * @param max
      * @param categoryId
      * @param locationName
@@ -93,8 +99,8 @@ public class ZaplataBgRepository {
         IntStream range = IntStream.rangeClosed(1, max / 20);
         range.parallel().forEach(currentStep -> {
             WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
-            driver.get(ZAPLATA_BG_HOST + "/" + locationName + "/?&cat%5B0%5D=" + categoryId + "&page=" + currentStep);
-            driver.findElement(By.cssSelector("body > div.page.lineHeightFix.pInside > ul.scheme23 > li.left > div.listItems"))
+            driver.get(host + "/" + locationName + "/?&cat%5B0%5D=" + categoryId + "&page=" + currentStep);
+            driver.findElement(By.cssSelector(offersSelector))
                     .findElements(By.tagName("ul"))
                     .parallelStream()
                     .forEach(webElement -> {

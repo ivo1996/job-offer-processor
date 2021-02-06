@@ -3,9 +3,11 @@ package com.uni.jobofferprocessor.joboffersources.zaplatabg;
 import com.uni.jobofferprocessor.core.JobOffer;
 import com.uni.jobofferprocessor.util.JobOfferError;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -14,6 +16,8 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class ZaplataBgService {
+
+    private final Integer maxOffers;
 
     private final ZaplataBgRepository zaplataBgRepository;
 
@@ -24,15 +28,17 @@ public class ZaplataBgService {
      *
      * @param zaplataBgRepository
      */
-    public ZaplataBgService(ZaplataBgRepository zaplataBgRepository) {
+    public ZaplataBgService(ZaplataBgRepository zaplataBgRepository, Environment env) {
         this.zaplataBgRepository = zaplataBgRepository;
         log.info("Fetching zaplata.bg available categories");
         this.availableJobCategories = zaplataBgRepository.getCategories();
         log.info("Available zaplata.bg categories: " + this.availableJobCategories.size());
+        this.maxOffers = Integer.parseInt(Objects.requireNonNull(env.getProperty("general.max-offers")));
     }
 
     /**
      * Returns preloaded list of locations
+     *
      * @return
      */
     public List<String> findAllLocations() {
@@ -41,6 +47,7 @@ public class ZaplataBgService {
 
     /**
      * Returns preloaded list of categories
+     *
      * @return
      */
     public List<ZaplataBgCategoryParameter> findAllCategories() {
@@ -49,6 +56,7 @@ public class ZaplataBgService {
 
     /**
      * validates parameters and calls service to extract job offers
+     *
      * @param max
      * @param categoryId
      * @param locationName
@@ -67,7 +75,7 @@ public class ZaplataBgService {
         if (!findAllLocations().contains(locationName)) {
             throw new JobOfferError("Location is invalid. Received: " + locationName);
         }
-        if (max < 1) {
+        if (max < 1 || max >= maxOffers) {
             throw new JobOfferError("Size is invalid. Received: " + max);
         }
 

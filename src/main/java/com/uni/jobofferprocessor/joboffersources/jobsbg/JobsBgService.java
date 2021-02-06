@@ -3,9 +3,11 @@ package com.uni.jobofferprocessor.joboffersources.jobsbg;
 import com.uni.jobofferprocessor.core.JobOffer;
 import com.uni.jobofferprocessor.util.JobOfferError;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -14,6 +16,8 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class JobsBgService {
+
+    private final Integer maxOffers;
 
     private final JobsBgRepository jobsBgRepository;
 
@@ -26,7 +30,7 @@ public class JobsBgService {
      *
      * @param jobsBgRepository
      */
-    public JobsBgService(JobsBgRepository jobsBgRepository) {
+    public JobsBgService(JobsBgRepository jobsBgRepository, Environment env) {
         log.info("Fetching Jobs.bg available locatons.");
         locationsList = jobsBgRepository.findAllLocations();
         log.info("Available Jobs.bg locations: " + locationsList.size());
@@ -34,10 +38,12 @@ public class JobsBgService {
         categoriesList = jobsBgRepository.findAllCategories();
         log.info("Available Jobs.bg job categories: " + categoriesList.size());
         this.jobsBgRepository = jobsBgRepository;
+        this.maxOffers = Integer.parseInt(Objects.requireNonNull(env.getProperty("general.max-offers")));
     }
 
     /**
      * Validate and call repository
+     *
      * @param size
      * @param locationId
      * @param categoryId
@@ -61,7 +67,7 @@ public class JobsBgService {
         if (locationIdFound.isEmpty()) {
             throw new JobOfferError("Location is invalid. Received: " + locationId);
         }
-        if (size < 1) {
+        if (size < 1 || size >= maxOffers) {
             throw new JobOfferError("Size is invalid. Received: " + size);
         }
         return jobsBgRepository.findAllJobs(size, locationId, categoryId);

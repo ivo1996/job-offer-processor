@@ -23,33 +23,39 @@ public class OlxRepository {
 
     private final SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
     private final Integer timeout;
-
-    private static final String OLX_HOST = "https://www.olx.bg/rabota/";
+    private final String offersSelector;
+    private final String locationsSelector;
+    private final String host;
 
     /**
      * Injects selenium config and fetches timout property from configuration
+     *
      * @param seleniumWebDriverConfiguration
      * @param env
      */
     public OlxRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
+        this.host = Objects.requireNonNull(env.getProperty("olx.url"));
+        this.offersSelector = Objects.requireNonNull(env.getProperty("olx.offers-selector"));
+        this.locationsSelector = Objects.requireNonNull(env.getProperty("olx.locations-selector"));
     }
 
     /**
      * Waits for stupid gdpr consent button and fetches all locations
+     *
      * @return
      */
     public List<OlxLocation> findAllLocations() {
         List<OlxLocation> locations = new ArrayList<>();
         WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
         WebDriverWait block = new WebDriverWait(driver, this.timeout);
-        driver.get(OLX_HOST);
+        driver.get(host);
         block.until(ExpectedConditions.visibilityOfElementLocated(By.id("onetrust-accept-btn-handler")));
         driver.findElement(By.id("onetrust-accept-btn-handler")).click();
         block.until(ExpectedConditions.visibilityOfElementLocated(By.id("cityField")));
         driver.findElement(By.id("cityField")).click();
-        driver.findElement(By.cssSelector("#proposalContainer > div.abs.categorySelectContainer > ul"))
+        driver.findElement(By.cssSelector(locationsSelector))
                 .findElements(By.cssSelector("li"))
                 .parallelStream()
                 .forEach(region -> {
@@ -70,6 +76,7 @@ public class OlxRepository {
 
     /**
      * Fetches all locations by parameters, parallel processing both for individual offers and pages
+     *
      * @param maxSize
      * @param location
      * @return
@@ -78,11 +85,11 @@ public class OlxRepository {
         List<JobOffer> offerList = new ArrayList<>();
         WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
         WebDriverWait block = new WebDriverWait(driver, this.timeout);
-        driver.get(OLX_HOST);
+        driver.get(host);
         block.until(ExpectedConditions.visibilityOfElementLocated(By.id("onetrust-accept-btn-handler")));
         driver.findElement(By.id("onetrust-accept-btn-handler")).click();
-        block.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#offers_table > tbody")));
-        driver.findElement(By.cssSelector("#offers_table > tbody"))
+        block.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(offersSelector)));
+        driver.findElement(By.cssSelector(offersSelector))
                 .findElements(By.className("wrap"))
                 .parallelStream()
                 .forEach(offer -> {
