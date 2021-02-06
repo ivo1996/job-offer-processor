@@ -25,7 +25,6 @@ import java.util.stream.IntStream;
 public class ZaplataBgRepository {
 
     private final SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
-    private final ZaplataBgService zaplataBgService;
     private final Integer timeout;
     private final String host;
     private final String offersSelector;
@@ -48,12 +47,10 @@ public class ZaplataBgRepository {
      * Injects selenium config and fetches timeout property from yml
      *
      * @param seleniumWebDriverConfiguration
-     * @param zaplataBgService
      * @param env
      */
-    public ZaplataBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, ZaplataBgService zaplataBgService, Environment env) {
+    public ZaplataBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
-        this.zaplataBgService = zaplataBgService;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
         this.host = Objects.requireNonNull(env.getProperty("zaplatabg.url"));
         this.offersSelector = Objects.requireNonNull(env.getProperty("zaplatabg.offers-selector"));
@@ -99,7 +96,6 @@ public class ZaplataBgRepository {
      */
     public List<JobOffer> getJobOffers(Integer max, Integer categoryId, String locationName) {
         List<JobOffer> offerList = new ArrayList<>();
-        String category = zaplataBgService.findAllCategories().stream().findAny().filter(it -> it.id.equals(categoryId)).get().description;
         IntStream range = IntStream.rangeClosed(1, max / 20);
         range.parallel().forEach(currentStep -> {
             WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
@@ -110,7 +106,6 @@ public class ZaplataBgRepository {
                     .forEach(webElement -> {
                         WebElement element = webElement.findElement(By.className("c2"));
                         JobOffer offer = JobOffer.builder()
-                                .jobPosition(category)
                                 .offerLink(element.findElement(By.tagName("a")).getAttribute("href"))
                                 .location(element.findElement(By.className("location")).getText().split(",")[1])
                                 .referenceNumber(element.findElement(By.tagName("a")).getAttribute("href").replaceAll("\\D+", ""))

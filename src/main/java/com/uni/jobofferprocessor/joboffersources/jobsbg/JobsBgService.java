@@ -70,7 +70,10 @@ public class JobsBgService {
         if (size < 1 || size >= maxOffers) {
             throw new JobOfferError("Size is invalid. Received: " + size);
         }
-        return jobsBgRepository.findAllJobs(size, locationId, categoryId);
+        String category = categoriesList.stream().filter(it -> it.getId().equals(categoryId)).findAny().get().getName();
+        List<JobOffer> offers = jobsBgRepository.findAllJobs(size, locationId, categoryId);
+        offers.forEach(it -> it.setJobPosition(category));
+        return offers;
     }
 
     /**

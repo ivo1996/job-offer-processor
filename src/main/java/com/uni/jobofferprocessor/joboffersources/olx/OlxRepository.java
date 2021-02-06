@@ -22,7 +22,6 @@ import java.util.Objects;
 public class OlxRepository {
 
     private final SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
-    private final OlxService olxService;
     private final Integer timeout;
     private final String offersSelector;
     private final String locationsSelector;
@@ -30,13 +29,13 @@ public class OlxRepository {
 
     /**
      * Injects selenium config and fetches timout property from configuration
-     *  @param seleniumWebDriverConfiguration
+     *
+     * @param seleniumWebDriverConfiguration
      * @param olxService
      * @param env
      */
-    public OlxRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, OlxService olxService, Environment env) {
+    public OlxRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
-        this.olxService = olxService;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
         this.host = Objects.requireNonNull(env.getProperty("olx.url"));
         this.offersSelector = Objects.requireNonNull(env.getProperty("olx.offers-selector"));

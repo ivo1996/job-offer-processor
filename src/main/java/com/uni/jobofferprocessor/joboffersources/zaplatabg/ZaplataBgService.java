@@ -2,7 +2,6 @@ package com.uni.jobofferprocessor.joboffersources.zaplatabg;
 
 import com.uni.jobofferprocessor.core.JobOffer;
 import com.uni.jobofferprocessor.util.JobOfferError;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -21,8 +20,6 @@ public class ZaplataBgService {
     private final Integer maxOffers;
 
     private final ZaplataBgRepository zaplataBgRepository;
-
-    @Getter
     private final List<ZaplataBgCategoryParameter> availableJobCategories;
 
     /**
@@ -80,8 +77,10 @@ public class ZaplataBgService {
         if (max < 1 || max >= maxOffers) {
             throw new JobOfferError("Size is invalid. Received: " + max);
         }
-
-        return zaplataBgRepository.getJobOffers(max, categoryId, locationName);
+        String category = availableJobCategories.stream().filter(it -> it.id.equals(categoryId)).findAny().get().description;
+        List<JobOffer> offerList = zaplataBgRepository.getJobOffers(max, categoryId, locationName);
+        offerList.forEach(it -> it.setJobPosition(category));
+        return offerList;
     }
 
 }

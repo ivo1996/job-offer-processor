@@ -1,5 +1,6 @@
 package com.uni.jobofferprocessor.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.io.File;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @author ivelin.dimitrov
  */
 @Component
+@Slf4j
 public class SeleniumWebDriverConfiguration {
 
     private final WebDriver driver;
@@ -114,5 +117,11 @@ public class SeleniumWebDriverConfiguration {
      */
     public WebDriver getStaticDriver() {
         return driver;
+    }
+
+    @PreDestroy
+    public void onDestroy() {
+        log.info("Closing static driver");
+        driver.close();
     }
 }

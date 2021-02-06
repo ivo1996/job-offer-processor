@@ -26,7 +26,6 @@ public class JobsBgRepository {
 
 
     private final SeleniumWebDriverConfiguration seleniumWebDriverConfiguration;
-    private final JobsBgService jobsBgService;
     private final Integer timeout;
     private final String offersSelector;
     private final String locationsSelector;
@@ -39,12 +38,10 @@ public class JobsBgRepository {
      * Inits timeout from application properties and injects selenium configuration
      *
      * @param seleniumWebDriverConfiguration
-     * @param jobsBgService
      * @param env
      */
-    public JobsBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, JobsBgService jobsBgService, Environment env) {
+    public JobsBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
-        this.jobsBgService = jobsBgService;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
         this.offersSelector = Objects.requireNonNull(env.getProperty("jobsbg.offers-selector"));
         this.locationsSelector = Objects.requireNonNull(env.getProperty("jobsbg.locations-selector"));
@@ -86,12 +83,11 @@ public class JobsBgRepository {
      */
     public List<JobOffer> findAllJobs(Integer maxSize, Integer locationId, Integer categoryId) {
         List<JobOffer> offersList = new ArrayList<>();
-        String category = jobsBgService.findAllCategories().stream().filter(it -> it.getId().equals(categoryId)).findAny().get().getName();
         IntStream range = IntStream.rangeClosed(0, maxSize / 15 - 1);
         range.parallel().forEach(currentStep -> {
             WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
             driver.get(host + currentStep * 15 + "&add_sh=1&categories%5B0%5D=" + categoryId + "&location_sid=" + locationId);
-            offersList.addAll(getJobsFromPage(driver, category));
+            offersList.addAll(getJobsFromPage(driver));
             driver.close();
         });
 
@@ -106,7 +102,7 @@ public class JobsBgRepository {
      *
      * @param driver
      */
-    public List<JobOffer> getJobsFromPage(WebDriver driver, String category) {
+    public List<JobOffer> getJobsFromPage(WebDriver driver) {
         List<JobOffer> offerList = new ArrayList<>();
         driver.findElement(By.cssSelector(offersSelector))
                 .findElements(By.tagName("tr"))
@@ -114,7 +110,6 @@ public class JobsBgRepository {
                 .forEach(tableRow -> {
                     JobOffer jobOffer = new JobOffer();
                     try {
-                        jobOffer.setJobPosition(category);
                         jobOffer.setDescription(tableRow
                                 .findElements(By.tagName("td"))
                                 .get(0)
