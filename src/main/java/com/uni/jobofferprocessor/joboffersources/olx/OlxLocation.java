@@ -10,19 +10,9 @@ import lombok.Setter;
  * @author ivelin.dimitrov
  */
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class OlxLocation {
     String dataId;
     String name;
-
-    @Override
-    public String toString() {
-        return "OlxLocation{" +
-                "dataId='" + dataId + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

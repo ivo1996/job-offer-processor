@@ -1,7 +1,9 @@
 package com.uni.jobofferprocessor;
 
+import com.uni.jobofferprocessor.joboffersources.olx.OlxRepository;
 import com.uni.jobofferprocessor.joboffersources.olx.OlxService;
 import com.uni.jobofferprocessor.util.JobOfferError;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,14 +15,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author ivelin.dimitrov
  */
 @SpringBootTest
+@Slf4j
 class OlxTests {
 
     @Autowired
     OlxService olxService;
 
+    @Autowired
+    OlxRepository olxRepository;
+
     @Test
     void getAllLocationsPositiveTest() {
-        assertFalse(olxService.findAllLocations().isEmpty());
+        assertFalse(olxRepository.findAllLocations().isEmpty());
     }
 
     @Test

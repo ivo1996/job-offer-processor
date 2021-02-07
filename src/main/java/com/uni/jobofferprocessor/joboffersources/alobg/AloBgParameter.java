@@ -10,8 +10,6 @@ import lombok.Setter;
  * @author ivelin.dimitrov
  */
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class AloBgParameter {

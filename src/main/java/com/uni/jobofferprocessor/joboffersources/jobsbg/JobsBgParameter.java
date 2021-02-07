@@ -9,18 +9,9 @@ import lombok.Setter;
  * @author ivelin.dimitrov
  */
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class JobsBgParameter {
     Integer id;
     String name;
 
-    @Override
-    public String toString() {
-        return "JobsBgParameter{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

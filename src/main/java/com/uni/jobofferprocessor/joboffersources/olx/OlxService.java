@@ -1,7 +1,6 @@
 package com.uni.jobofferprocessor.joboffersources.olx;
 
 import com.uni.jobofferprocessor.core.JobOffer;
-import com.uni.jobofferprocessor.joboffersources.jobsbg.JobsBgParameter;
 import com.uni.jobofferprocessor.util.JobOfferError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
