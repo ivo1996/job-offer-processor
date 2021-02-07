@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author ivelin.dimitrov
@@ -31,10 +33,12 @@ public class OlxRepository {
      * Injects selenium config and fetches timout property from configuration
      *
      * @param seleniumWebDriverConfiguration
-     * @param olxService
      * @param env
      */
-    public OlxRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
+    public OlxRepository(
+            SeleniumWebDriverConfiguration seleniumWebDriverConfiguration,
+            Environment env
+    ) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
         this.host = Objects.requireNonNull(env.getProperty("olx.url"));
@@ -49,7 +53,7 @@ public class OlxRepository {
      */
     public List<OlxLocation> findAllLocations() {
         List<OlxLocation> locations = new ArrayList<>();
-        WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
+        WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
         WebDriverWait block = new WebDriverWait(driver, this.timeout);
         driver.get(host);
         block.until(ExpectedConditions.visibilityOfElementLocated(By.id("onetrust-accept-btn-handler")));
@@ -71,12 +75,12 @@ public class OlxRepository {
                     } catch (NoSuchElementException ignored) {
                     }
                 });
-
-        return locations;
+        driver.close();
+        return locations.stream().filter(it -> it.getDataId() != null).collect(Collectors.toList());
     }
 
     /**
-     * Fetches all locations by parameters, parallel processing both for individual offers and pages
+     * parallel processing both for individual offers and pages
      *
      * @param maxSize
      * @param location
@@ -84,9 +88,25 @@ public class OlxRepository {
      */
     public List<JobOffer> findAllJobs(Integer maxSize, String location) {
         List<JobOffer> offerList = new ArrayList<>();
-        WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
-        WebDriverWait block = new WebDriverWait(driver, this.timeout);
-        driver.get(host);
+        IntStream.range(1, maxSize / 40 + 1).parallel().forEach(idx -> {
+            WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
+            WebDriverWait block = new WebDriverWait(driver, this.timeout);
+            driver.get(host + "/" + location + "/" + "?page=" + idx);
+            offerList.addAll(getJobsFromSinglePage(driver, block));
+            driver.close();
+        });
+        return offerList;
+    }
+
+    /**
+     * Process a single page with offers
+     *
+     * @param driver
+     * @param block
+     * @return
+     */
+    private List<JobOffer> getJobsFromSinglePage(WebDriver driver, WebDriverWait block) {
+        List<JobOffer> offers = new ArrayList<>();
         block.until(ExpectedConditions.visibilityOfElementLocated(By.id("onetrust-accept-btn-handler")));
         driver.findElement(By.id("onetrust-accept-btn-handler")).click();
         block.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(offersSelector)));
@@ -94,10 +114,19 @@ public class OlxRepository {
                 .findElements(By.className("wrap"))
                 .parallelStream()
                 .forEach(offer -> {
-                    WebElement internalTable = offer.findElement(By.cssSelector("td > div > table"));
-
-                    //TODO complete logic, extract and implement parallel page iteration
+                    WebElement header = offer.findElement(By.cssSelector("td > div > table > tbody > tr:nth-child(1) > td.title-cell.title-cell--jobs > div "));
+                    JobOffer jobOffer = JobOffer.builder()
+                            .offerLink(header.findElement(By.tagName("h3")).findElement(By.tagName("a")).getAttribute("href"))
+                            .referenceNumber(header.findElement(By.tagName("h3")).findElement(By.tagName("a")).getAttribute("href").split("-ID")[1].split("\\.html")[0])
+                            .description(header.findElement(By.tagName("h3")).findElement(By.tagName("a")).findElement(By.tagName("strong")).getText())
+                            .build();
+                    try {
+                        jobOffer.setSalary(header.findElement(By.cssSelector(" div > span.price-label")).getText());
+                    } catch (NoSuchElementException ignored) {
+                    }
+                    jobOffer.setLocation(offer.findElement(By.cssSelector("td > div > table > tbody > tr:nth-child(2) > td.bottom-cell > div > p > small:nth-child(1)")).getText());
+                    offers.add(jobOffer);
                 });
-        return offerList;
+        return offers;
     }
 }

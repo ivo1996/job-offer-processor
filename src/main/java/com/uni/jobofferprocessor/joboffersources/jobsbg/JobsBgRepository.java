@@ -40,7 +40,10 @@ public class JobsBgRepository {
      * @param seleniumWebDriverConfiguration
      * @param env
      */
-    public JobsBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
+    public JobsBgRepository(
+            SeleniumWebDriverConfiguration seleniumWebDriverConfiguration,
+            Environment env
+    ) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
         this.offersSelector = Objects.requireNonNull(env.getProperty("jobsbg.offers-selector"));
@@ -56,7 +59,7 @@ public class JobsBgRepository {
      */
     public List<JobsBgParameter> findAllCategories() {
         List<JobsBgParameter> categories = new ArrayList<>();
-        WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
+        WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
 
         return extractAndAddChips(categories, driver, "categoriesChip", categoriesSelector);
     }
@@ -68,7 +71,7 @@ public class JobsBgRepository {
      */
     public List<JobsBgParameter> findAllLocations() {
         List<JobsBgParameter> locations = new ArrayList<>();
-        WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
+        WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
 
         return extractAndAddChips(locations, driver, "locationChip", locationsSelector);
     }
@@ -184,6 +187,7 @@ public class JobsBgRepository {
             } catch (ArrayIndexOutOfBoundsException ignored) {
             }
         });
+        driver.close();
 
         return parameters
                 .stream()

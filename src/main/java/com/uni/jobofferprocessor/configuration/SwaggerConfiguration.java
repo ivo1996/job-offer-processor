@@ -15,7 +15,6 @@ public class SwaggerConfiguration {
 
     /**
      * Swagger configuration - matches every possible entity and endpoint
-     * @return
      */
     @Bean
     public Docket api() {
