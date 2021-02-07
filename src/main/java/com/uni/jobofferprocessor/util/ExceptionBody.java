@@ -8,9 +8,11 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.sql.Timestamp;
+import java.util.Map;
 
 /**
  * The response structure on error
+ *
  * @author ivelin.dimitrov
  */
 @Getter
@@ -23,4 +25,7 @@ public class ExceptionBody {
     Timestamp timestamp;
     String message;
     String details;
+    Map<String, String> fields;
 }
+
+

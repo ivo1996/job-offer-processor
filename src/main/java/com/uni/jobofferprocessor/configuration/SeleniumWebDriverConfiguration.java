@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PreDestroy;
 import java.io.File;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;

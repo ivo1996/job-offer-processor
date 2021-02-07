@@ -74,7 +74,7 @@ public class ZaplataBgRepository {
      *
      * @return
      */
-    public List<ZaplataBgCategoryParameter> getCategories() {
+    public List<ZaplataBgCategoryParameter> findAllCategories() {
         List<ZaplataBgCategoryParameter> categoryParameterList = new ArrayList<>();
         WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
         driver.get(host);

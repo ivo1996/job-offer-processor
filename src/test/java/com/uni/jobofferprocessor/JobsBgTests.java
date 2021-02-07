@@ -5,6 +5,7 @@ import com.uni.jobofferprocessor.core.JobOffer;
 import com.uni.jobofferprocessor.joboffersources.jobsbg.JobsBgRepository;
 import com.uni.jobofferprocessor.joboffersources.jobsbg.JobsBgService;
 import com.uni.jobofferprocessor.util.JobOfferError;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Slf4j
 class JobsBgTests {
 
     @Autowired
@@ -31,12 +33,12 @@ class JobsBgTests {
 
     @Test
     void getJobsBgCategoriesPositiveTest() {
-        assertFalse(jobsBgService.findAllCategories().isEmpty());
+        assertFalse(jobsBgRepository.findAllCategories().isEmpty());
     }
 
     @Test
     void getJobsBgTownsPositiveTest() {
-        assertFalse(jobsBgService.findAllLocations().isEmpty());
+        assertFalse(jobsBgRepository.findAllLocations().isEmpty());
     }
 
     @Test
@@ -74,6 +76,4 @@ class JobsBgTests {
     void getJobsFromMultiplePagesNegativeValidationForCategoryTest() {
         assertThrows(JobOfferError.class, () -> jobsBgService.findAllJobs(15, 3, 200000));
     }
-
-
 }

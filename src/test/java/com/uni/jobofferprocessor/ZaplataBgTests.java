@@ -1,7 +1,9 @@
 package com.uni.jobofferprocessor;
 
+import com.uni.jobofferprocessor.joboffersources.zaplatabg.ZaplataBgRepository;
 import com.uni.jobofferprocessor.joboffersources.zaplatabg.ZaplataBgService;
 import com.uni.jobofferprocessor.util.JobOfferError;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,19 +15,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author ivelin.dimitrov
  */
 @SpringBootTest
+@Slf4j
 class ZaplataBgTests {
 
     @Autowired
     ZaplataBgService zaplataBgService;
 
+    @Autowired
+    ZaplataBgRepository zaplataBgRepository;
+
     @Test
     void getAllLocationsPositiveTest() {
-        assertFalse(zaplataBgService.findAllLocations().isEmpty());
+        assertFalse(zaplataBgRepository.findAllLocations().isEmpty());
     }
 
     @Test
     void getAllCategoriesPositiveTest() {
-        assertFalse(zaplataBgService.findAllCategories().isEmpty());
+        assertFalse(zaplataBgRepository.findAllCategories().isEmpty());
     }
 
     @Test
@@ -47,6 +53,4 @@ class ZaplataBgTests {
     void getJobsFromMultiplePagesNegativeValidationForLocationTest() {
         assertThrows(JobOfferError.class, () -> zaplataBgService.findAllJobs(20, 3, "fakeName"));
     }
-
-
 }

@@ -1,10 +1,14 @@
 package com.uni.jobofferprocessor;
 
+import com.uni.jobofferprocessor.joboffersources.alobg.AloBgRepository;
 import com.uni.jobofferprocessor.joboffersources.alobg.AloBgService;
 import com.uni.jobofferprocessor.util.JobOfferError;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.lang.annotation.Retention;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,19 +17,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author ivelin.dimitrov
  */
 @SpringBootTest
+@Slf4j
 class AloBgTests {
 
     @Autowired
     AloBgService aloBgService;
 
+    @Autowired
+    AloBgRepository aloBgRepository;
+
     @Test
     void getAllLocationsPositiveTest() {
-        assertFalse(aloBgService.findAllLocations().isEmpty());
+        assertFalse(aloBgRepository.findAllLocations().isEmpty());
     }
 
     @Test
     void getAllCategoriesPositiveTest() {
-        assertFalse(aloBgService.findAllCategories().isEmpty());
+        assertFalse(aloBgRepository.findAllCategories().isEmpty());
     }
 
     @Test

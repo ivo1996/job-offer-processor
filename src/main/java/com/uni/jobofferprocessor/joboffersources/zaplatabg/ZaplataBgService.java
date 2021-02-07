@@ -33,7 +33,7 @@ public class ZaplataBgService {
     ) {
         this.zaplataBgRepository = zaplataBgRepository;
         log.info("Fetching zaplata.bg available categories");
-        this.availableJobCategories = zaplataBgRepository.getCategories();
+        this.availableJobCategories = zaplataBgRepository.findAllCategories();
         log.info("Available zaplata.bg categories: " + this.availableJobCategories.size());
         this.maxOffers = Integer.parseInt(Objects.requireNonNull(env.getProperty("general.max-offers")));
     }
