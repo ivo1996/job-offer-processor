@@ -27,7 +27,10 @@ public class ZaplataBgService {
      *
      * @param zaplataBgRepository
      */
-    public ZaplataBgService(ZaplataBgRepository zaplataBgRepository, Environment env) {
+    public ZaplataBgService(
+            ZaplataBgRepository zaplataBgRepository,
+            Environment env
+    ) {
         this.zaplataBgRepository = zaplataBgRepository;
         log.info("Fetching zaplata.bg available categories");
         this.availableJobCategories = zaplataBgRepository.getCategories();

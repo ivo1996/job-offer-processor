@@ -30,7 +30,10 @@ public class JobsBgService {
      *
      * @param jobsBgRepository
      */
-    public JobsBgService(JobsBgRepository jobsBgRepository, Environment env) {
+    public JobsBgService(
+            JobsBgRepository jobsBgRepository,
+            Environment env
+    ) {
         log.info("Fetching Jobs.bg available locatons.");
         locationsList = jobsBgRepository.findAllLocations();
         log.info("Available Jobs.bg locations: " + locationsList.size());

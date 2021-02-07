@@ -1,4 +1,4 @@
-package com.uni.jobofferprocessor.joboffersources.olx;
+package com.uni.jobofferprocessor.joboffersources.alobg;
 
 import com.uni.jobofferprocessor.core.JobOffer;
 import com.uni.jobofferprocessor.util.JobOfferError;
@@ -16,35 +16,28 @@ import java.util.List;
  * @author ivelin.dimitrov
  */
 @Controller
-@RequestMapping("/api/olx")
-public class OlxController {
+@RequestMapping("api/alobg")
+public class AloBgController {
 
     @Autowired
-    OlxService olxService;
+    AloBgService service;
 
-    /**
-     * Returns preloaded locations
-     *
-     * @return
-     */
-    @GetMapping("locations")
-    public ResponseEntity<List<OlxLocation>> findAllLocations() {
-        return new ResponseEntity<>(olxService.findAllLocations(), HttpStatus.OK);
+    @GetMapping("/locations")
+    public ResponseEntity<List<AloBgParameter>> getAllLocations() {
+        return new ResponseEntity<>(service.findAllLocations(), HttpStatus.OK);
     }
 
-    /**
-     * Returns all jobs filtered by locaiton parameter
-     *
-     * @param size
-     * @param locationName
-     * @return
-     * @throws JobOfferError
-     */
+    @GetMapping("/categories")
+    public ResponseEntity<List<AloBgParameter>> getAllCategories() {
+        return new ResponseEntity<>(service.findAllCategories(), HttpStatus.OK);
+    }
+
     @GetMapping()
     public ResponseEntity<List<JobOffer>> findAllJobs(
             @RequestParam(name = "size") Integer size,
-            @RequestParam(name = "locationName") String locationName
+            @RequestParam(name = "locationId") Integer locationId,
+            @RequestParam(name = "categoryId") Integer categoryId
     ) throws JobOfferError {
-        return new ResponseEntity<>(olxService.findAllJobs(size, locationName), HttpStatus.OK);
+        return new ResponseEntity<>(service.findAllJobs(size, locationId, categoryId), HttpStatus.OK);
     }
 }

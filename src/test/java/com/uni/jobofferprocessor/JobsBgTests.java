@@ -41,7 +41,7 @@ class JobsBgTests {
 
     @Test
     void getJobsFromSinglePagePositiveTest() {
-        WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
+        WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
         String category = jobsBgService.findAllCategories().stream().filter(it -> it.getId() == 56).findAny().get().getName();
         driver.get(jobsBgRepository.getHost() + 0 + "&add_sh=1&categories%5B0%5D=" + 56 + "&location_sid=" + 3);
         List<JobOffer> offerList = new ArrayList<>(jobsBgRepository.getJobsFromPage(driver));
@@ -50,6 +50,7 @@ class JobsBgTests {
                 .filter(jobOffer -> !jobOffer.getReferenceNumber().isBlank())
                 .collect(Collectors.toList());
         offerList.forEach(it -> it.setJobPosition(category));
+        driver.close();
         assertFalse(offerList.isEmpty());
     }
 

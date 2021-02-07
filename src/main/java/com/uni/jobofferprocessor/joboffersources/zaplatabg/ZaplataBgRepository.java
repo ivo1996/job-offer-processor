@@ -49,7 +49,10 @@ public class ZaplataBgRepository {
      * @param seleniumWebDriverConfiguration
      * @param env
      */
-    public ZaplataBgRepository(SeleniumWebDriverConfiguration seleniumWebDriverConfiguration, Environment env) {
+    public ZaplataBgRepository(
+            SeleniumWebDriverConfiguration seleniumWebDriverConfiguration,
+            Environment env
+    ) {
         this.seleniumWebDriverConfiguration = seleniumWebDriverConfiguration;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
         this.host = Objects.requireNonNull(env.getProperty("zaplatabg.url"));
@@ -73,13 +76,14 @@ public class ZaplataBgRepository {
      */
     public List<ZaplataBgCategoryParameter> getCategories() {
         List<ZaplataBgCategoryParameter> categoryParameterList = new ArrayList<>();
-        WebDriver driver = seleniumWebDriverConfiguration.getStaticDriver();
+        WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
         driver.get(host);
         driver.findElement(By.id("hsCatLink")).click();
         WebDriverWait block = new WebDriverWait(driver, this.timeout);
         block.until(ExpectedConditions.visibilityOfElementLocated(By.id("hsCatPU")));
         categoryParameterList.addAll(extractCategoriesFromModalTd(categoriesSelector + "(1)", driver));
         categoryParameterList.addAll(extractCategoriesFromModalTd(categoriesSelector + "(2)", driver));
+        driver.close();
         return categoryParameterList
                 .stream()
                 .sorted(Comparator.comparingInt(ZaplataBgCategoryParameter::getId))
@@ -96,7 +100,7 @@ public class ZaplataBgRepository {
      */
     public List<JobOffer> getJobOffers(Integer max, Integer categoryId, String locationName) {
         List<JobOffer> offerList = new ArrayList<>();
-        IntStream range = IntStream.rangeClosed(1, max / 20);
+        IntStream range = IntStream.rangeClosed(1, max / 20 + 1);
         range.parallel().forEach(currentStep -> {
             WebDriver driver = seleniumWebDriverConfiguration.getNewDriver();
             driver.get(host + "/" + locationName + "/?&cat%5B0%5D=" + categoryId + "&page=" + currentStep);

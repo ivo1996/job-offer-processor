@@ -2,8 +2,8 @@ package com.uni.jobofferprocessor.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -21,8 +21,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class SeleniumWebDriverConfiguration {
 
-    private final WebDriver driver;
-
     private final DriverArguments arguments;
 
     private final Integer timeout;
@@ -34,7 +32,6 @@ public class SeleniumWebDriverConfiguration {
     public SeleniumWebDriverConfiguration(DriverArguments driverArguments, Environment env) {
         this.arguments = driverArguments;
         this.timeout = Integer.parseInt(Objects.requireNonNull(env.getProperty("driver.timeoutInSeconds")));
-        driver = createNewDriver();
     }
 
     /**
@@ -67,6 +64,8 @@ public class SeleniumWebDriverConfiguration {
      */
     static {
         System.setProperty("webdriver.chrome.driver", findFile("chromedriver.exe"));
+        System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
+
     }
 
     /**
@@ -82,46 +81,5 @@ public class SeleniumWebDriverConfiguration {
                 return path + filename;
         }
         return "";
-    }
-
-    /**
-     * close driver
-     */
-    public void close() {
-        driver.close();
-    }
-
-    /**
-     * navigate to url
-     *
-     * @param url
-     */
-    public void navigateTo(String url) {
-        driver.navigate()
-                .to(url);
-    }
-
-    /**
-     * click an element
-     *
-     * @param element
-     */
-    public void clickElement(WebElement element) {
-        element.click();
-    }
-
-    /**
-     * get driver instance
-     *
-     * @return
-     */
-    public WebDriver getStaticDriver() {
-        return driver;
-    }
-
-    @PreDestroy
-    public void onDestroy() {
-        log.info("Closing static driver");
-        driver.close();
     }
 }
