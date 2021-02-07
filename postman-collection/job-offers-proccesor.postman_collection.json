@@ -1,0 +1,317 @@
+{
+	"info": {
+		"_postman_id": "eb06759a-c53c-4b8d-8137-5d17f8a26766",
+		"name": "job-offers-proccesor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Fetch jobs from multiple sources",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"aloBg\":{\r\n        \"size\": 40,\r\n        \"locationId\": 22,\r\n        \"categoryId\": 3433\r\n    },\r\n    \"jobsBg\":{\r\n        \"size\": 15,\r\n        \"locationId\": 3,\r\n        \"categoryId\": 56\r\n    },\r\n    \"zaplataBg\":{\r\n        \"size\": 20,\r\n        \"categoryId\": 3,\r\n        \"locationName\": \"rousse\"\r\n    },\r\n    \"olx\": {\r\n        \"size\": 40,\r\n        \"locationName\": \"oblast-varna\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/multiple",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"multiple"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch aloBg categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/olx/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"olx",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch olx categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/alobg/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"alobg",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch jobsbg categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/jobsbg/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"jobsbg",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch zaplatabg categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/zaplatabg/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"zaplatabg",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch zaplatabg locations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/zaplatabg/locations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"zaplatabg",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch josbg locations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/jobsbg/locations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"jobsbg",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch alobg locations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/alobg/locations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"alobg",
+						"locations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch alobg jobs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/alobg?size=40&locationId=22&categoryId=3433",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"alobg"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "40"
+						},
+						{
+							"key": "locationId",
+							"value": "22"
+						},
+						{
+							"key": "categoryId",
+							"value": "3433"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch jobsBg jobs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/jobsbg?size=60&locationId=19&categoryId=56",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"jobsbg"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "60"
+						},
+						{
+							"key": "locationId",
+							"value": "19"
+						},
+						{
+							"key": "categoryId",
+							"value": "56"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch zaplataBg jobs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/zaplatabg?categoryId=4&locationName=sofia&size=20",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"zaplatabg"
+					],
+					"query": [
+						{
+							"key": "categoryId",
+							"value": "4"
+						},
+						{
+							"key": "locationName",
+							"value": "sofia"
+						},
+						{
+							"key": "size",
+							"value": "20"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch olx jobs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/olx?locationName=oblast-varna&size=80",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"olx"
+					],
+					"query": [
+						{
+							"key": "locationName",
+							"value": "oblast-varna"
+						},
+						{
+							"key": "size",
+							"value": "80"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
