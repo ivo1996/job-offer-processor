@@ -3,6 +3,7 @@ package com.uni.jobofferprocessor.joboffersources.alobg;
 import com.uni.jobofferprocessor.configuration.SeleniumWebDriverConfiguration;
 import com.uni.jobofferprocessor.core.JobOffer;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -123,18 +124,22 @@ public class AloBgRepository {
      */
     public List<JobOffer> findAllJobsFromSinglePage(WebDriver driver) {
         List<JobOffer> offersList = new ArrayList<>();
-        driver.findElement(By.cssSelector("#consent-info > div:nth-child(2) > button")).click();
-        driver.findElement(By.cssSelector(offersSelector))
-                .findElements(By.className("listvip-item"))
-                .parallelStream()
-                .forEach(item -> offersList.add(JobOffer.builder()
-                        .offerLink(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-header > a")).getAttribute("href"))
-                        .referenceNumber(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-header > a")).getAttribute("href").replaceAll("\\D+", ""))
-                        .location(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-header > div.listvip-item-address > i")).getText())
-                        .description(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-header > a")).getText())
-                        .jobPosition(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-content > span:nth-child(1)")).getText())
-                        .build()
-                ));
+        try {
+            driver.findElement(By.cssSelector("#consent-info > div:nth-child(2) > button")).click();
+            driver.findElement(By.cssSelector(offersSelector))
+                    .findElements(By.className("listvip-item"))
+                    .parallelStream()
+                    .forEach(item -> offersList.add(JobOffer.builder()
+                            .offerLink(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-header > a")).getAttribute("href"))
+                            .referenceNumber(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-header > a")).getAttribute("href").replaceAll("\\D+", ""))
+                            .location(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-header > div.listvip-item-address > i")).getText())
+                            .description(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-header > a")).getText())
+                            .jobPosition(item.findElement(By.cssSelector("div.listvip-params > div.listvip-item-content > span:nth-child(1)")).getText())
+                            .build()
+                    ));
+        } catch (NoSuchElementException ignored) {
+
+        }
 
         return offersList;
     }
